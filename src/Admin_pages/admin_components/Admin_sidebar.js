@@ -123,21 +123,21 @@ export default function Admin_sidebar() {
                 <Link
                   className={
                     "text-sm uppercase py-4  font-semibold block font-Roboto " +
-                    (window.location.href.indexOf("/admin/manage_subjects") !== -1
+                    (window.location.href.indexOf("/admin/course_details") !== -1
                       ? "text-sky-500 hover:text-sky-600"
                       : "text-slate-100 hover:text-slate-200")
                   }
-                  to="/admin/manage_subjects"
+                  to="/admin/course_details"
                 >
                   <i
                     className={
                       "fas fa-address-book mr-2 text-lg " +
-                      (window.location.href.indexOf("/admin/manage_subjects") !== -1
+                      (window.location.href.indexOf("/admin/course_details") !== -1
                         ? "opacity-75"
                         : "text-sky-600")
                     }
                   ></i>{" "}
-                  Manage Subjects
+                  Course Details
                 </Link>
               </li>
 

@@ -1,41 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-
-  export default function Editor(props) {
- // Empty dependency array ensures useEffect runs only once, like componentDidMount
+function Editor(props) {
+  const [editorKey, setEditorKey] = useState(0); // Add editorKey state
 
   const handleEditorChange = (event, editor) => {
-    console.log(event);
+    const data = editor.getData();
+    props.handleInputData(data);
   };
 
-  const handleBlur = (event, editor) => {
-    console.log('Blur.', editor);
-  };
-
-  const handleFocus = (event, editor) => {
-    console.log('Focus.', editor);
-  };
+  useEffect(() => {
+    // Set editor data initially if value prop is provided
+    if (props.value) {
+      setEditorKey(editorKey + 1); // Update editor key to reset content
+    }
+  }, [props.value]);
 
   return (
-    <div className='my-1 p-2'>
-          <label htmlFor={props.forinput} className={`block font-bold text-md  text-slate-900 font-Raleway `}>
-            {props.label}
-        </label>
+    <div className='my-1 p-1'>
+      <label  className='block font-bold text-md text-slate-900 font-Raleway'>
+        {props.label}
+      </label>
       <CKEditor
         editor={ClassicEditor}
-        data=''
-        onReady={(editor) => {
-          // You can store the "editor" and use when it is needed.
-         
-        }}
+        data={props.value}
+        key={editorKey} // Add key prop to reset editor content
         onChange={handleEditorChange}
-        onBlur={handleBlur}
-        onFocus={handleFocus}
       />
     </div>
   );
-};
+}
 
-
+export default Editor;

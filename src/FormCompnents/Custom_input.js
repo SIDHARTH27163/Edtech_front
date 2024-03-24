@@ -11,7 +11,7 @@ export default function Custom_input(props) {
   }, []);
 
   return (
-    <div className='my-1 p-2'>
+    <div className='my-1 p-1'>
           <label htmlFor={props.forinput} className={`block font-bold text-md  text-slate-900 font-Raleway `}>
             {props.label}
         </label>
@@ -21,7 +21,7 @@ export default function Custom_input(props) {
           `border-blue-400 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm text-black ` +
           props.className
         }
-        placeholder={props.Placeholder}
+        placeholder={props.placeholder}
         value={props.value}
         onChange={(e) => props.handleInputData(e.target.value)}
         ref={input}
