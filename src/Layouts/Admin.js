@@ -4,8 +4,9 @@ import AdminHome from '../Admin_pages/AdminHome';
 import Admin_sidebar from '../Admin_pages/admin_components/Admin_sidebar';
 import Admin_Navbar from '../Admin_pages/admin_components/Admin_navbar';
 import HeaderStats from '../Admin_pages/admin_components/HeaderStats';
-import Manage_courses from '../Admin_pages/Manage_course';
+
 import Manage_course_description from '../Admin_pages/manage_course_description';
+import Manage_domain from "../Admin_pages/Manage_domain";
 
 
 function Admin() {
@@ -19,8 +20,9 @@ function Admin() {
 
                 <Switch>
                     <Route path="/admin/dashboard" exact component={AdminHome} />
-                     <Route path="/admin/manage_courses" exact component ={Manage_courses}/>
+                     <Route path="/admin/manage_domains" exact component ={Manage_domain}/>
                     <Route path="/admin/course_details" exact component={Manage_course_description}/>
+                  
                     <Redirect from="/admin" to="/admin/dashboard" />
                 </Switch>
             </div></div></>

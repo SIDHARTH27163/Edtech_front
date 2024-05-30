@@ -1,6 +1,6 @@
 import React, { useState , useEffect } from 'react';
 import Custom_input from '../FormCompnents/Custom_input';
-import Custom_file from '../FormCompnents/Custom_file';
+
 import Custom_h1 from '../Custom_fonts/Custom_h1';
 import CustomTextarea from '../FormCompnents/CustomTextarea';
 import Custom_button from '../FormCompnents/Custom_Button';
@@ -8,7 +8,7 @@ import axios from 'axios';
 import Success_alerts from '../Custom_alerts/Success_alerts';
 import Warning_alerts from '../Custom_alerts/Warning_alerts';
 
-function Manage_courses() {
+function Manage_domain() {
   const [course, setCourse] = useState('');
   const [heading, setHeading] = useState('');
   const [description, setDescription] = useState('');
@@ -28,9 +28,9 @@ function Manage_courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:1024/api/courses');
-        setCourses(response.data.courses); // Assuming API response is an array of courses
-      
+        const response = await axios.get('http://localhost:1024/api/domains');
+        setCourses(response.data.domains); // Assuming API response is an array of courses
+      // console.log(response.data)
         setLoading(false);
       } catch (error) {
         // setError(error.message);
@@ -49,8 +49,8 @@ function Manage_courses() {
     setCourse('');
     setHeading('');
     setDescription('');
-    setDuration('');
-    setfile('')
+    // setDuration('');
+    setfile(null)
   }
   const submit = async (e) => {
     e.preventDefault();
@@ -58,11 +58,11 @@ function Manage_courses() {
       const formData = new FormData();
       formData.append('name', course); // Use the value directly (e.g., course) instead of formData.name
     formData.append('description', description);
-    formData.append('duration', duration);
+    // formData.append('duration', duration);
     formData.append('heading', heading);
     formData.append('image', file);
   
-      const response = await axios.post('http://localhost:1024/api/courses/', formData, {
+      const response = await axios.post('http://localhost:1024/api/domains', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -71,8 +71,8 @@ function Manage_courses() {
        
         setsAlert(response.data.msg)
        //  setCourses(prevCourses => [...prevCourses, response.data.course]);
-       const updatedCoursesResponse = await axios.get('http://localhost:1024/api/courses');
-       setCourses(updatedCoursesResponse.data.courses);
+       const updatedCoursesResponse = await axios.get('http://localhost:1024/api/domains');
+       setCourses(updatedCoursesResponse.data.domains);
        resetForm()
        } else {
      
@@ -86,14 +86,14 @@ function Manage_courses() {
   };
   const change_status = async (courseId) => {
     try {
-      const response = await axios.put(`http://localhost:1024/api/courses/${courseId}`, {
+      const response = await axios.put(`http://localhost:1024/api/domains/${courseId}`, {
         // Additional data if needed
       });
   
       if (response.status === 200) {
         // Fetch the updated list of courses after changing status
-        const updatedCoursesResponse = await axios.get('http://localhost:1024/api/courses');
-        setCourses(updatedCoursesResponse.data.courses);
+        const updatedCoursesResponse = await axios.get('http://localhost:1024/api/domains');
+        setCourses(updatedCoursesResponse.data.domains);
   
         setsAlerts(response.data.message);
       } else {
@@ -111,7 +111,7 @@ function Manage_courses() {
     <div className='mx-auto mb-6 h-auto p-5 relative w-full'>
       <div className='lg:p-5 md:p-5 p-2 max-w-5xl mx-auto bg-white'>
         <Custom_h1
-          text="Add Course"
+          text="Add Domain"
           className="text-rose-600 font-Averia font-bold my-2 underline text-3xl"
         />
         
@@ -121,7 +121,7 @@ function Manage_courses() {
      
         <div className='p-5 max-w-3xl mx-auto rounded-xl shadow-lg'>
           <Custom_input
-            label="Enter Course title"
+            label="Enter Domain title"
             forinput="type"
             placeholder="Eg:Web Development"
             type="text"
@@ -132,19 +132,19 @@ function Manage_courses() {
             isFocused={true}
           />
           {errors.map(error => error.path === 'name' && <span className="text-red-500 font-Roboto font-semibold">{error.msg}</span>)}
-          <Custom_input
-            label="Enter Course Duration"
-            forinput="type"
-            placeholder="Eg: 1 Month, 2 Months"
-            type="text"
-            className="mt-1 block w-full"
-            handleInputData={setDuration}
-            value={duration}
-            autoComplete=""
-            isFocused={true}
-          />
-          {errors.map(error => error.path === 'duration' && <span className="text-red-500 font-Roboto font-semibold">{error.msg}</span>)}
-    
+          {/*<Custom_input*/}
+          {/*  label="Enter Course Duration"*/}
+          {/*  forinput="type"*/}
+          {/*  placeholder="Eg: 1 Month, 2 Months"*/}
+          {/*  type="text"*/}
+          {/*  className="mt-1 block w-full"*/}
+          {/*  handleInputData={setDuration}*/}
+          {/*  value={duration}*/}
+          {/*  autoComplete=""*/}
+          {/*  isFocused={true}*/}
+          {/*/>*/}
+          {/*{errors.map(error => error.path === 'duration' && <span className="text-red-500 font-Roboto font-semibold">{error.msg}</span>)}*/}
+
           <CustomTextarea
             rows="3"
             label="Enter Heading"
@@ -196,7 +196,7 @@ function Manage_courses() {
 
       <div className='lg:p-5 md:p-5 p-2 max-w-5xl mx-auto bg-white'>
         <Custom_h1
-          text="All Added Courses"
+          text="All Added Domains"
           className="text-rose-600 font-Averia font-bold my-2 underline text-3xl"
         />
         
@@ -209,14 +209,12 @@ function Manage_courses() {
                  Status
                 </th>
                 <th scope="col" className="px-5 py-3">
-                  Course Title
+                  Domain Title
                 </th>
                 <th scope="col" className="px-5 py-3">
                  Image
                 </th>
-                <th scope="col" className="px-5 py-3">
-                  Course duration
-                </th>
+
                 <th scope="col" className="px-2 py-3">
                 Heading
                 </th>
@@ -241,9 +239,7 @@ function Manage_courses() {
                   <img src={`http://localhost:1024/${course.image}`} alt="Course Image" className="object-cover h-24 w-24" />
 
                   </td>
-                  <td className="px-5 py-4  text-gray-900 whitespace-nowrap dark:text-white">
-                    {course.duration}
-                  </td>
+
                   <td className="px-2 py-4 whitespace-normal leading-1 ">
                     {course.heading}
                   </td>
@@ -264,4 +260,4 @@ function Manage_courses() {
   );
 }
 
-export default Manage_courses;
+export default Manage_domain;

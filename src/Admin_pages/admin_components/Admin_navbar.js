@@ -32,7 +32,7 @@ export default function Admin_Navbar() {
           </form>
           {/* User */}
           <ul className="flex-col md:flex-row list-none items-center hidden md:flex">
-        <User_dropdown/>
+       
           </ul>
         </div>
       </nav>

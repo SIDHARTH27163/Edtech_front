@@ -1,34 +1,75 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from 'axios';
+import { API_URL } from '../constant/util';
 
-function Editor(props) {
-  const [editorKey, setEditorKey] = useState(0); // Add editorKey state
+function Editor({ handleInputData }) {
+  const [editorData, setEditorData] = useState('');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
 
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
-    props.handleInputData(data);
+   
+    setEditorData(data);
+    handleInputData(data); // Call parent component function with editor data
   };
 
-  useEffect(() => {
-    // Set editor data initially if value prop is provided
-    if (props.value) {
-      setEditorKey(editorKey + 1); // Update editor key to reset content
+  const uploadImage = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const response = await axios.post(`${API_URL}/courses/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      if (response.data.url) {
+        const imageUrl = response.data.url;
+       
+        setUploadedImageUrl(imageUrl); // Set the uploaded image URL
+      } else {
+        throw new Error('Image upload failed');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
-  }, [props.value]);
+  };
+
+  function MyCustomUploadAdapterPlugin(editor) {
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+      return {
+        upload: async () => {
+          try {
+            const file = await loader.file;
+            await uploadImage(file); // Upload the image
+            return { default: uploadedImageUrl }; // Return the uploaded image URL
+          } catch (error) {
+            console.error('Error uploading image:', error);
+            return null;
+          }
+        }
+      };
+    };
+  }
 
   return (
-    <div className='my-1 p-1'>
-      <label  className='block font-bold text-md text-slate-900 font-Raleway'>
-        {props.label}
-      </label>
-      <CKEditor
-        editor={ClassicEditor}
-        data={props.value}
-        key={editorKey} // Add key prop to reset editor content
-        onChange={handleEditorChange}
-      />
-    </div>
+    <>
+    <CKEditor
+      editor={ClassicEditor}
+      data={editorData}
+      onChange={handleEditorChange}
+      config={{
+        ckfinder: {
+          uploadUrl: uploadedImageUrl // Use the uploaded image URL as uploadUrl
+        },
+        extraPlugins: [MyCustomUploadAdapterPlugin]
+      }}
+    />
+
+    </>
   );
 }
 
